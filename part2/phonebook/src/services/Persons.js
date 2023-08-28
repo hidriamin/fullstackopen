@@ -10,8 +10,8 @@ const addPerson = (personObject) => {
   const request = axios.post(baseUrl, personObject);
   return request.then((response) => response.data);
 };
-const changeNum = (id, personObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, personObject);
+const changeNum = (id, changedPerson) => {
+  const request = axios.put(`${baseUrl}/${id}`, changedPerson);
   return request.then((response) => response.data);
 };
 const handleDelete = (id) => {

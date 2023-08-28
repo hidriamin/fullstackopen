@@ -12,7 +12,7 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((resp) => setPersons(resp));
-  }, [persons]);
+  }, []);
 
   const handleSearchValue = (event) => {
     setSearchValue(event.target.value);
@@ -39,13 +39,18 @@ const App = () => {
     if (checkIfPersonOnList) {
       const id = persons.find((person) => person.name === newName)?.id;
       console.log(id);
+
       if (
         window.confirm(
           `${newName} is already added to the phonebook, replace the old number with the new one?`
         )
       ) {
-        personService.changeNum(id, personObject).then((resp) => {
-          setPersons(persons.concat(resp));
+        const person = persons.find((person) => person.id === id);
+        const changedPerson = { ...person, number: newNum };
+        personService.changeNum(id, changedPerson).then((resp) => {
+          setPersons(
+            persons.map((person) => (person.id === id ? resp : person))
+          );
           setNewName("");
           setNewNum("");
         });
