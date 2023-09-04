@@ -1,5 +1,9 @@
 const express = require("express");
+app.use(express.static("build"));
 var morgan = require("morgan");
+var cors = require("cors");
+
+app.use(cors());
 
 const app = express();
 
@@ -85,5 +89,5 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT);
