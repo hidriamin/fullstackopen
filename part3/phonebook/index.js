@@ -1,5 +1,4 @@
 const express = require("express");
-app.use(express.static("build"));
 var morgan = require("morgan");
 var cors = require("cors");
 
