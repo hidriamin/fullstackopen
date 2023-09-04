@@ -2,12 +2,11 @@ const express = require("express");
 var morgan = require("morgan");
 var cors = require("cors");
 
-app.use(cors());
-
 const app = express();
 
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(cors());
 
 var persons = [
   {
