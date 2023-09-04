@@ -61,6 +61,7 @@ app.get("/api/persons/:id", (req, resp) => {
 app.delete("/api/persons/:id", (req, resp) => {
   const id = Number(req.params.id);
   const person = persons.find((person) => person.id === id);
+  persons = persons.filter((person) => person.id !== id);
   resp.send(`deleted ${person.name} from the list.`);
 });
 
@@ -87,5 +88,5 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 app.listen(PORT);
