@@ -1,5 +1,10 @@
-GET https://phonebook-ufmh.onrender.com/api/persons/
+POST https://phonebook-ufmh.onrender.com/api/persons
 Content-Type: application/json
+
+{
+    "name":"",
+    "number":"aaaa"
+}
 
 
 
