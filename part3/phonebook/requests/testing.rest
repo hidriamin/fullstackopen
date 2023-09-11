@@ -2,7 +2,7 @@ POST https://phonebook-ufmh.onrender.com/api/persons
 Content-Type: application/json
 
 {
-    "name":"",
+    "name":"AAA",
     "number":"aaaa"
 }
 

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 var morgan = require("morgan");
 var cors = require("cors");
@@ -9,6 +10,8 @@ app.use(express.static("build"));
 
 app.use(morgan("tiny"));
 app.use(cors());
+
+const Person = require("./models/person");
 
 var persons = [
   {
@@ -45,18 +48,13 @@ app.get("/info", (request, response) => {
 
 //Full phonebook list
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((persons) => response.json(persons));
 });
 
 //Get the info for a single person
 app.get("/api/persons/:id", (req, resp) => {
   const id = Number(req.params.id);
-  const person = persons.find((person) => person.id === id);
-  if (person) {
-    resp.send(person);
-  } else {
-    resp.status(404).end();
-  }
+  Person.findById(req.params.id).then((person) => response.json(person));
 });
 
 //Delete a person from the phonebook
@@ -81,14 +79,17 @@ app.post("/api/persons", (request, response) => {
   } else if (!body.number) {
     return response.status(400).json({ error: "must have a number" });
   }
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
     id: generateId(),
-  };
-  persons = persons.concat(person);
-  response.json(person);
+  });
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
+  // persons = persons.concat(person);
+  // response.json(person);
 });
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT);
