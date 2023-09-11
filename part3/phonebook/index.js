@@ -71,10 +71,8 @@ const generateId = () => {
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
-  const checkPersonInList = persons.find((person) => person.name === body.name);
-  if (checkPersonInList) {
-    return response.status(400).json({ error: "name already exists" });
-  } else if (!body.name) {
+
+  if (!body.name) {
     return response.status(400).json({ error: "must have a name" });
   } else if (!body.number) {
     return response.status(400).json({ error: "must have a number" });
@@ -82,11 +80,11 @@ app.post("/api/persons", (request, response) => {
   const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
   });
   person.save().then((savedPerson) => {
     response.json(savedPerson);
   });
+
   // persons = persons.concat(person);
   // response.json(person);
 });

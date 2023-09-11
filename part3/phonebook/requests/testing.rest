@@ -1,11 +1,11 @@
-POST https://phonebook-ufmh.onrender.com/api/persons
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
-{
-    "name":"AAA",
-    "number":"aaaa"
-}
 
+{
+    "name":"that",
+    "number":"321"
+}
 
 
 
