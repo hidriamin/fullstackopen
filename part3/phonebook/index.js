@@ -71,9 +71,7 @@ app.delete("/api/persons/:id", (req, resp) => {
     .then((result) => {
       resp.status(204).end();
     })
-    .catch((error) => {
-      resp.status(500).end();
-    });
+    .catch((error) => next(error));
 });
 
 const generateId = () => {
@@ -93,9 +91,25 @@ app.post("/api/persons", (request, response) => {
     name: body.name,
     number: body.number,
   });
+
   person.save().then((savedPerson) => {
     response.json(savedPerson);
   });
+});
+
+//Modify existing person
+app.put("/api/persons/:id", (req, resp, next) => {
+  const body = req.body;
+  !console.log(body);
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+  !console.log(person);
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then((updatedPerson) => resp.json(updatedPerson))
+    .catch((error) => next(error));
 });
 
 const errorHandler = (error, req, resp, next) => {
