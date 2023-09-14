@@ -13,36 +13,13 @@ app.use(cors());
 
 const Person = require("./models/person");
 
-var persons = [
-  {
-    id: 1,
-    name: "Amin",
-    number: "12345",
-  },
-  {
-    id: 2,
-    name: "Selim",
-    number: "12345",
-  },
-  {
-    id: 3,
-    name: "Youssef",
-    number: "12345",
-  },
-  {
-    id: 4,
-    name: "Yahya",
-    number: "12345",
-  },
-];
 //Get the information on the phonebook
-app.get("/info", (request, response) => {
+app.get("/info", (req, resp) => {
   var date = new Date();
-  var number = persons.length;
-  response.send(
-    `<p>Phonebook has info for ${number} people.
-   <br/> ${date}
-    </p>`
+  var number = Person.count({}).then((count) =>
+    resp.send(`<p>Phonebook has info for ${count} people.
+  <br/> ${date}
+   </p>`)
   );
 });
 
@@ -53,7 +30,6 @@ app.get("/api/persons", (request, response) => {
 
 //Get the info for a single person
 app.get("/api/persons/:id", (req, resp, next) => {
-  const id = Number(req.params.id);
   Person.findById(req.params.id)
     .then((person) => {
       if (person) {
