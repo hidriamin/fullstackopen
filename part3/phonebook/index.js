@@ -13,6 +13,15 @@ app.use(cors());
 
 const Person = require("./models/person");
 
+const errorHandler = (error, req, resp, next) => {
+  console.log(error);
+  if (error.name === "CastError") {
+    return resp.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return resp.status(400).json({ error: error.message });
+  }
+  next(error);
+};
 //Get the information on the phonebook
 app.get("/info", (req, resp) => {
   var date = new Date();
@@ -55,46 +64,35 @@ const generateId = () => {
 };
 
 //Add new person
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
-  if (!body.name) {
-    return response.status(400).json({ error: "must have a name" });
-  } else if (!body.number) {
-    return response.status(400).json({ error: "must have a number" });
-  }
   const person = new Person({
     name: body.name,
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    response.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      response.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 //Modify existing person
 app.put("/api/persons/:id", (req, resp, next) => {
-  const body = req.body;
-  !console.log(body);
-  const person = {
-    name: body.name,
-    number: body.number,
-  };
-  !console.log(person);
+  const { name, number } = req.body;
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  Person.findByIdAndUpdate(
+    req.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: "query" }
+  )
     .then((updatedPerson) => resp.json(updatedPerson))
     .catch((error) => next(error));
 });
 
-const errorHandler = (error, req, resp, next) => {
-  console.log(error);
-  if (error.name === "CastError") {
-    return resp.status(400).send({ error: "malformatted id" });
-  }
-  next(error);
-};
 app.use(errorHandler);
 
 const PORT = process.env.PORT;

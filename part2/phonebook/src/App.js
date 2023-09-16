@@ -101,7 +101,8 @@ const App = () => {
           setTimeout(() => setNotifText(null), 5000);
         })
         .catch((error) => {
-          console.log("Error!");
+          setNotifText(`${error.response.data.error}`);
+          setTimeout(() => setNotifText(null), 5000);
         });
     }
   };
